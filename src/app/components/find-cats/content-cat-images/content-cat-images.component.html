@@ -1,9 +1,4 @@
 <div class="flex flex-col h-full w-full">
-  <div *ngIf="drawerMode === 'over'" class="w-full flex justify-end">
-    <button mat-icon-button type="button" (click)="onDrawerToggle.emit()">
-      <mat-icon class="text-white">menu</mat-icon>
-    </button>
-  </div>
   <div
     *ngIf="!catUrls.length"
     class="w-full h-full overflow-y-scroll flex flex-wrap p-3"

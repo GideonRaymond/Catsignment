@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CatService } from './../../services/cat.service';
@@ -15,7 +21,8 @@ export class FindCatsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private catService: CatService,
-    private observer: BreakpointObserver
+    private observer: BreakpointObserver,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +48,8 @@ export class FindCatsComponent implements OnInit, AfterViewInit {
         this.drawer.open();
       }
     });
+
+    this.cdRef.detectChanges();
   }
 
   closeDrawer(): void {

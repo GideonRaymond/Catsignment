@@ -1,0 +1,15 @@
+.page {
+  background-color: darkmagenta;
+  background-image: url("../assets/images/background-phone.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+
+  @media screen and (min-width: 450px) {
+    background-image: url("../assets/images/background-ipad.jpg");
+  }
+
+  @media screen and (min-width: 1200px) {
+    background-image: url("../assets/images/background-web.jpg");
+  }
+}

@@ -5,4 +5,9 @@
 export const environment = {
   production: false,
   apiKey: '',
+  endPoints: {
+    breedList: 'https://api.thecatapi.com/v1/breeds',
+    categoriesList: 'https://api.thecatapi.com/v1/categories',
+    search: 'https://api.thecatapi.com/v1/images/search',
+  },
 };

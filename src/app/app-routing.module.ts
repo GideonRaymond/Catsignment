@@ -1,10 +1,23 @@
+import { FindCatsComponent } from './components/find-cats/find-cats.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LandingComponent } from './components/landing/landing.component';
+import { AuthGuard } from './guards/auth.guard';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: LandingComponent, data: { next: 'find' } },
+  { path: 'find', component: FindCatsComponent, canActivate: [AuthGuard] },
+  // {
+  //   path: 'collection',
+  //   component: ,
+  //   canActivate: [AuthGuard],
+  // },
+  { path: '**', component: PageNotFoundComponent },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

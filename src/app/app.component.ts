@@ -7,16 +7,17 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'catsignment';
-  apiKey = environment.apiKey;
+export class AppComponent implements OnInit {
+  /** Title of the app */
+  title = 'Catsignment';
+  /** Name displayed in Header */
+  menuName: string;
+  /** List of navigation links in the Header */
+  menuItems: MenuItem[] = [
+    { link: 'furry friend finder', path: 'find' },
+    { link: 'cat collection', path: 'collection' },
+  ];
 
-  constructor(private http: HttpClient) {}
 
-  onButtonClick(): void {
-    const options = { headers: { 'x-api-key': this.apiKey } };
-    this.http
-      .get('https://api.thecatapi.com/v1/categories', options)
-      .subscribe((res) => console.log(res));
   }
 }

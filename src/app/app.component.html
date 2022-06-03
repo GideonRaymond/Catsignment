@@ -1,2 +1,4 @@
-<h1>App loaded</h1>
-<button mat-flat-button color="primary" (click)="onButtonClick()">Get</button>
+<div class="page relative w-screen">
+  <app-header [menuItems]="menuItems" [menuName]="menuName"></app-header>
+  <router-outlet></router-outlet>
+</div>

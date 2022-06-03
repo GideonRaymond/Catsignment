@@ -1,0 +1,22 @@
+<form class="flex flex-col p-4" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <app-mat-autocomplete
+    class="mb-2"
+    [formGroup]="form"
+    label="Breed"
+    [options]="catBreeds"
+  ></app-mat-autocomplete>
+  <app-mat-select
+    class="mb-2"
+    [formGroup]="form"
+    label="CATegory"
+    [options]="catCategories"
+  ></app-mat-select>
+  <button
+    mat-flat-button
+    color="primary"
+    type="submit"
+    [disabled]="!form.valid"
+  >
+    Apply
+  </button>
+</form>

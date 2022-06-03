@@ -1,0 +1,11 @@
+<mat-toolbar
+  class="absolute top-0 border-b-black border-b-2 bg-transparent text-white z-50"
+>
+  <span class="uppercase text-2xl mr-4 text-pink-300">{{ menuName }}</span>
+  <ng-container *ngFor="let item of menuItems">
+    <app-nav-link
+      [menuItem]="item"
+      (onNavClick)="onNavButtonClick($event)"
+    ></app-nav-link>
+  </ng-container>
+</mat-toolbar>

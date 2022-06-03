@@ -1,0 +1,17 @@
+<mat-form-field>
+  <mat-label>{{ label }}</mat-label>
+  <mat-select [formControl]="control" multiple>
+    <mat-option *ngFor="let option of options" [value]="option.id">{{
+      option.name | capitalizeFirstLetter
+    }}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="control.hasError('invalid')">{{ errorMessage }}</mat-error>
+</mat-form-field>
+<button
+  *ngIf="control.value && control.touched"
+  mat-icon-button
+  (click)="control.reset()"
+  tabindex="-1"
+>
+  <mat-icon>close</mat-icon>
+</button>

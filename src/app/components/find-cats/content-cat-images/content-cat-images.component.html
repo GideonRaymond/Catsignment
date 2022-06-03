@@ -1,0 +1,24 @@
+<div class="flex flex-col h-full w-full">
+  <div *ngIf="drawerMode === 'over'" class="w-full flex justify-end">
+    <button mat-icon-button type="button" (click)="onDrawerToggle.emit()">
+      <mat-icon class="text-white">menu</mat-icon>
+    </button>
+  </div>
+  <div
+    *ngIf="!catUrls.length"
+    class="w-full h-full overflow-y-scroll flex flex-wrap p-3"
+  >
+    <ngx-skeleton-loader
+      *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]"
+      class="p-2 w-1/2 lg:w-1/4 h-48"
+    ></ngx-skeleton-loader>
+  </div>
+  <div
+    *ngIf="catUrls.length"
+    class="w-full h-full overflow-y-scroll flex flex-wrap p-3"
+  >
+    <div *ngFor="let url of catUrls" class="p-2 w-1/2 lg:w-1/4 h-48">
+      <img class="w-full h-full object-cover" [src]="url" alt="Cat Image" />
+    </div>
+  </div>
+</div>

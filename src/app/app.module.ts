@@ -9,8 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [AppComponent],
+    AppComponent,
+    NavLinkComponent,
     PageNotFoundComponent,
     FindCatsComponent,
+    LandingComponent,
+    MatSelectComponent,
+    MatAutocompleteComponent,
+    HeaderComponent,
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -18,6 +24,12 @@ import { MatButtonModule } from '@angular/material/button';
     HttpClientModule,
     MatButtonModule,
     MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

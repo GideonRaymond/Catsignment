@@ -1,0 +1,24 @@
+<mat-form-field *ngIf="options && options.length">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    type="text"
+    placeholder="Pick one"
+    [value]="control.value ? control.value.name : null"
+    matInput
+    [formControl]="control"
+    [matAutocomplete]="auto"
+  />
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{ option.name | capitalizeFirstLetter }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<button
+  *ngIf="control.value && control.touched"
+  mat-icon-button
+  (click)="control.reset()"
+  tabindex="-1"
+>
+  <mat-icon>close</mat-icon>
+</button>

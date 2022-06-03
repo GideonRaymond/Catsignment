@@ -1,6 +1,11 @@
-import { environment } from './../environments/environment';
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
+
+/** Custom interface for navigation links */
+export interface MenuItem {
+  link: string;
+  path: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -18,6 +23,10 @@ export class AppComponent implements OnInit {
     { link: 'cat collection', path: 'collection' },
   ];
 
+  constructor(private userService: UserService) {}
 
+  ngOnInit(): void {
+    /** Sets 'menuName' to username if exists, else 'meow' */
+    this.menuName = this.userService.getUser() ?? 'meow';
   }
 }

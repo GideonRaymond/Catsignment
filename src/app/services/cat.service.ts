@@ -1,4 +1,4 @@
-import { Subject, Observable, map } from 'rxjs';
+import { Subject, Observable, map, throttleTime } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -40,6 +40,8 @@ export class CatService {
   private cats = new Subject<any[]>();
   /** Observable to subscribe to, new values pushed by 'cats' */
   cats$: Observable<any[]> = this.cats.asObservable();
+  /** Bool to set when request starts and finished */
+  private isLoadingImages: boolean = false;
 
   constructor(private http: HttpClient) {
     /** Sets the constant header with apiKey from the environment */
@@ -48,6 +50,10 @@ export class CatService {
         'x-api-key': environment.apiKey,
       },
     };
+  }
+
+  get isLoading(): boolean {
+    return this.isLoadingImages;
   }
 
   private getQueryParameters(): string {
@@ -73,13 +79,18 @@ export class CatService {
 
   getCatImages(): void {
     /** Retrieves images and pushes new values via Subject to Observers */
-
     const query = this.getQueryParameters();
     const url = environment.endPoints.search + query;
 
+    this.isLoadingImages = true;
+
     this.http
       .get<any[]>(url, this.header)
-      .subscribe((res) => this.cats.next(res));
+      .pipe(throttleTime(700))
+      .subscribe((res) => {
+        this.cats.next(res);
+        this.isLoadingImages = false;
+      });
   }
 
   getListOfCategories(): Observable<SelectItem[]> {

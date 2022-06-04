@@ -31,6 +31,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { CapitalizeFirstLetterPipe } from './pipes/capitalize-first-letter.pipe';
 import { ContentCatImagesComponent } from './components/find-cats/content-cat-images/content-cat-images.component';
 import { DrawerFilterComponent } from './components/find-cats/drawer-filter/drawer-filter.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { DrawerFilterComponent } from './components/find-cats/drawer-filter/draw
     ReactiveFormsModule,
     HttpClientModule,
     NgxSkeletonLoaderModule,
+    ScrollingModule,
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,

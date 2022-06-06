@@ -3,6 +3,15 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
+import {
+  GetCatsResponse,
+  GetFavoriteCatsResponse,
+  GetCatBreedsResponse,
+  GetCatCategoriesResponse,
+  PostCatFavoriteRequest,
+  CatImage,
+  CatFavorite,
+} from '../components/response-types';
 
 interface Header {
   headers: {
@@ -110,10 +119,10 @@ export class CatService {
     const url = environment.endPoints.search + query;
 
     this.http
-      .get<any[]>(url, this.header)
+      .get<GetCatsResponse>(url, this.header)
       .pipe(
         filter(() => !this.isLoading),
-        map((res: any[]) => {
+        map((res) => {
           this.isLoadingImages = true;
           return this.mapToCatItem(res);
         })
@@ -138,10 +147,10 @@ export class CatService {
     const url = environment.endPoints.favorites + query;
 
     this.http
-      .get<any[]>(url, this.header)
+      .get<GetFavoriteCatsResponse>(url, this.header)
       .pipe(
         filter(() => !this.isLoading),
-        map((res: any[]) => {
+        map((res) => {
           this.isLoadingImages = true;
           return this.mapToCatItem(res, true);
         })
@@ -160,8 +169,11 @@ export class CatService {
      * a SelectItem
      */
     return this.http
-      .get<any[]>(environment.endPoints.categoriesList, this.header)
-      .pipe(map((res: any[]) => this.mapToSelectItem(res)));
+      .get<GetCatCategoriesResponse>(
+        environment.endPoints.categoriesList,
+        this.header
+      )
+      .pipe(map((res) => this.mapToSelectItem(res)));
   }
 
   getListOfBreeds(): Observable<SelectItem[]> {
@@ -169,8 +181,8 @@ export class CatService {
      * and converts this to a SelectItem
      */
     return this.http
-      .get<any[]>(environment.endPoints.breedList, this.header)
-      .pipe(map((res: any[]) => this.mapToSelectItem(res)));
+      .get<GetCatBreedsResponse>(environment.endPoints.breedList, this.header)
+      .pipe(map((res) => this.mapToSelectItem(res)));
   }
 
   postStarredCat(catId: number | string): void {
@@ -183,7 +195,10 @@ export class CatService {
     if (!cat) return this.handleError();
     cat.isLoading = true;
 
-    const data = { image_id: cat.id, sub_id: this.userService.userId };
+    const data: PostCatFavoriteRequest = {
+      image_id: cat.id,
+      sub_id: this.userService.userId,
+    };
 
     this.http
       .post(environment.endPoints.favorites, data, this.header)
@@ -212,21 +227,28 @@ export class CatService {
       });
   }
 
-  private mapToSelectItem(list: any[]): SelectItem[] {
+  private mapToSelectItem(
+    list: GetCatBreedsResponse | GetCatCategoriesResponse
+  ): SelectItem[] {
     /** Maps array with multiple values and takes only 'name' and 'id' */
     return list.map((l) => {
       return { id: l.id, name: l.name };
     });
   }
 
-  private mapToCatItem(list: any[], isStarred: boolean = false): Cat[] {
+  private mapToCatItem(
+    list: GetCatsResponse | GetFavoriteCatsResponse,
+    isStarred: boolean = false
+  ): Cat[] {
     /** Maps array with multiple values and takes only 'url' and 'id'
      * Defaults 'isLoading' to 'false'.
      */
-    return list.map((l) => {
+    return list.map((l: CatImage | CatFavorite) => {
       return {
         id: l.id,
-        imageUrl: isStarred ? l.image.url : l.url,
+        imageUrl: isStarred
+          ? (l as CatFavorite).image.url
+          : (l as CatImage).url,
         favoriteId: isStarred ? l.id : undefined,
         isLoading: false,
       };

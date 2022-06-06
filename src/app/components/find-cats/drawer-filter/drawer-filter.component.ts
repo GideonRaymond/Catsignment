@@ -44,6 +44,7 @@ export class DrawerFilterComponent implements OnInit {
     const categories = formValue['category'] ?? [];
 
     this.catService.setFilters(breedId, categories);
+    this.catService.getCatImages();
     this.onApply.emit();
   }
 }

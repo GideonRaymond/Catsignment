@@ -1,4 +1,4 @@
-import { Subject, Observable, map, filter, throttleTime } from 'rxjs';
+import { Subject, Observable, map, filter, throttleTime, timeout } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -86,10 +86,13 @@ export class CatService {
     return this.isLoadingImages;
   }
 
+  get isScrollEnd(): boolean {
+    return this.cats.length % this.requestLimit !== 0;
+  }
+
   private setCats(cats: Cat[]): void {
     this.cats = cats;
     this.catSubject.next(this.cats);
-    this.isInitializingImages = true;
   }
 
   private getQueryParameters(useOrder: boolean = true): string {
@@ -111,56 +114,47 @@ export class CatService {
     return query;
   }
 
-  getCatImages(): void {
+  getCatImages(isStarred: boolean = false): void {
     /** GET request which returns an array of GetCat objects and converts
      * them to Cat objects.
      */
-    const query = this.getQueryParameters();
-    const url = environment.endPoints.search + query;
+    const env = environment.endPoints;
+    let query = this.getQueryParameters(isStarred);
+    let url = isStarred ? env.favorites : env.search;
+    if (isStarred) {
+      const userId = this.userService.userId;
+      query += `&sub_id=${userId}&page=${this.scrollPage}`;
+    }
+
+    url = url + query;
 
     this.http
-      .get<GetCatsResponse>(url, this.header)
+      .get<GetCatsResponse | GetFavoriteCatsResponse>(url, this.header)
       .pipe(
-        filter(() => !this.isLoading),
+        filter(() => !this.isLoading && !this.isScrollEnd),
+        timeout(5000),
         map((res) => {
           this.isLoadingImages = true;
           return this.mapToCatItem(res);
         })
       )
-      .subscribe((res: Cat[]) => {
-        this.setCats([...this.cats, ...res]);
-        this.isLoadingImages = false;
-        this.isInitializingImages = false;
-        console.log(this.cats);
+      .subscribe({
+        next: (res: Cat[]) => {
+          this.finishRequest(res);
+          console.log('HERE');
+        },
+        error: () => {
+          this.handleError();
+          this.finishRequest([]);
+        },
       });
   }
 
-  getStarredCats(): void {
-    /** GET request that returns an array of GetCatFavorite objects,
-     * converts them to 'Cat' and sends them to Observers
-     */
-    const userId = this.userService.userId;
-    let query = this.getQueryParameters(false);
-    query += `&sub_id=${userId}`;
-    query += `&page=${this.scrollPage}`;
-
-    const url = environment.endPoints.favorites + query;
-
-    this.http
-      .get<GetFavoriteCatsResponse>(url, this.header)
-      .pipe(
-        filter(() => !this.isLoading),
-        map((res) => {
-          this.isLoadingImages = true;
-          return this.mapToCatItem(res, true);
-        })
-      )
-      .subscribe((res: Cat[]) => {
-        this.setCats([...this.cats, ...res]);
-        this.isLoadingImages = false;
-        this.isInitializingImages = false;
-        this.scrollPage += 1;
-      });
+  private finishRequest(res: Cat[]): void {
+    /** Tells the service that a request has succesfully been completed */
+    this.isLoadingImages = false;
+    this.isInitializingImages = false;
+    this.setCats(res);
   }
 
   getListOfCategories(): Observable<SelectItem[]> {
@@ -261,15 +255,12 @@ export class CatService {
   }
 
   setFilters(breedId: string, categoryIds: (string | number)[]) {
-    /** Resets the cats and sets the active filters selected by user
-     * before retrieving new ones
-     */
+    /** Resets the cats and sets the active filters selected by user */
     this.resetCats();
 
     this.activeBreedFilter = breedId;
     this.activeCategoryFilter = categoryIds;
-
-    this.getCatImages();
+    this.isInitializingImages = true;
   }
 
   setIsRemoving(catId: string | number): void {
@@ -289,6 +280,7 @@ export class CatService {
   }
 
   private handleError(): void {
+    /** TODO: Proper error-handling */
     return console.error('ERROR');
   }
 }

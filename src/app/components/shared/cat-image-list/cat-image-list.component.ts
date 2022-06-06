@@ -23,7 +23,6 @@ export class CatImageListComponent implements AfterViewInit {
   /** List of retrieved Cat objects from CatService */
   cats: Cat[] = [];
   icon: 'close' | 'star';
-  isScrollEnd: boolean = false;
   /** Empty array used to iterate over for the initial skeleton-loader */
   emptyArray = Array.apply(null, Array(20)).map(function () {});
 
@@ -48,19 +47,13 @@ export class CatImageListComponent implements AfterViewInit {
      * Deciding which icon to use on the cat-image.
      */
     this.catService.cats$.subscribe((cats) => {
-      this.isScrollEnd = !!this.cats.length && this.cats.length === cats.length;
-      this.cats = cats;
+      this.cats = [...this.cats, ...cats];
     });
 
     this.icon = this.isStarred ? 'close' : 'star';
     this.catService.resetCats();
     this.catService.resetFilters();
-    this.getCats();
-  }
-
-  getCats(): void {
-    if (this.isStarred) this.catService.getStarredCats();
-    else this.catService.getCatImages();
+    this.catService.getCatImages(this.isStarred);
   }
 
   ngAfterViewInit(): void {
@@ -75,10 +68,10 @@ export class CatImageListComponent implements AfterViewInit {
         map(() => this.scroller.measureScrollOffset('bottom')),
         pairwise(),
         filter((y, _) => y[0] > y[1] && y[1] < 300),
-        throttleTime(200)
+        throttleTime(400)
       )
       .subscribe(() => {
-        this.ngZone.run(() => this.getCats());
+        this.ngZone.run(() => this.catService.getCatImages(this.isStarred));
       });
   }
 

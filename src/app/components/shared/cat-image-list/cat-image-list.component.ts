@@ -22,7 +22,7 @@ export class CatImageListComponent implements AfterViewInit {
   @ViewChild('scroller') scroller: CdkVirtualScrollViewport;
   /** List of retrieved Cat objects from CatService */
   cats: Cat[] = [];
-  icon: string;
+  icon: 'close' | 'star';
   isScrollEnd: boolean = false;
   /** Empty array used to iterate over for the initial skeleton-loader */
   emptyArray = Array.apply(null, Array(20)).map(function () {});

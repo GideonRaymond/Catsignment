@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class UserService {
   /** Local storage key */
   private key: 'USERNAME';
+  private userIdExt: string = 'thecatsass';
 
   get isLoggedIn(): boolean {
     /** Checks if user is logged in by checking if user exists */
@@ -17,7 +18,16 @@ export class UserService {
     localStorage.setItem(this.key, username);
   }
 
-  getUser(): string | null {
+  get userName(): string {
+    return this.getUser() ?? '';
+  }
+
+  get userId(): string {
+    const user = this.getUser();
+    return user ? user + '-' + this.userIdExt : '';
+  }
+
+  private getUser(): string | null {
     /** Retrieves user from local storage */
     return localStorage.getItem(this.key);
   }

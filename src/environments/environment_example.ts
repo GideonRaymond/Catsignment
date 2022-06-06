@@ -9,5 +9,6 @@ export const environment = {
     breedList: 'https://api.thecatapi.com/v1/breeds',
     categoriesList: 'https://api.thecatapi.com/v1/categories',
     search: 'https://api.thecatapi.com/v1/images/search',
+    favorites: 'https://api.thecatapi.com/v1/favourites',
   },
 };

@@ -4,23 +4,30 @@
     class="w-full h-full overflow-y-scroll max-w-screen"
     [itemSize]="2"
   >
-    <ng-container *ngIf="catUrls.length">
-      <div
-        *cdkVirtualFor="let url of catUrls"
-        class="p-2 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72"
-      >
-        <img class="w-full h-full object-cover" [src]="url" alt="Cat Image" />
-      </div>
+    <ng-container *ngIf="cats.length">
+      <app-cat-image
+        *cdkVirtualFor="let cat of cats"
+        [cat]="cat"
+        [icon]="icon"
+        (onImageClick)="handleImageClick(cat)"
+      ></app-cat-image>
     </ng-container>
-    <ng-container *ngIf="!catUrls.length">
+    <ng-container *ngIf="isInitializing">
       <ngx-skeleton-loader
         *ngFor="let i of emptyArray"
         class="p-2 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72"
       ></ngx-skeleton-loader>
     </ng-container>
+    <span
+      *ngIf="!cats.length && !isLoading"
+      class="text-xl md:text-2xl lg:text-3xl text-white mt-16"
+      text-white
+      >No cats could be found!</span
+    >
   </cdk-virtual-scroll-viewport>
+
   <div
-    *ngIf="isLoading && !!catUrls.length"
+    *ngIf="isLoading && !!cats.length"
     class="my-2 w-full flex justify-center"
   >
     <mat-spinner diameter="40" color="accent"></mat-spinner>

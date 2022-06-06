@@ -1,0 +1,30 @@
+<div
+  class="my-2 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 overflow-hidden opacity-1 duration-400 relative cursor-pointer group"
+  [class]="{
+    'transition-opacity': cat.isRemoving,
+    'opacity-0': cat.isRemoving
+  }"
+  (click)="onImageClick.emit()"
+>
+  <img
+    class="w-full h-full object-cover transition-scale ease-in-out duration-600 group-hover:scale-125"
+    [src]="cat.imageUrl"
+    alt="Cat Image"
+  />
+  <div
+    class="absolute top-0 w-full h-full bg-black opacity-0 transition-opacity duration-600 group-hover:opacity-30"
+  ></div>
+  <div class="absolute flex justify-center items-center w-full h-full top-0">
+    <mat-spinner
+      *ngIf="cat.isLoading"
+      diameter="40"
+      color="accent"
+    ></mat-spinner>
+  </div>
+
+  <mat-icon
+    class="absolute top-3 right-3 cat-image-icon"
+    [color]="!!cat.favoriteId ? 'accent' : 'primary'"
+    >{{ icon }}</mat-icon
+  >
+</div>

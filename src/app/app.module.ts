@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
 import {
   MatFormFieldModule,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -29,23 +30,30 @@ import { MatSelectComponent } from './components/find-cats/form/mat-select/mat-s
 import { MatAutocompleteComponent } from './components/find-cats/form/mat-autocomplete/mat-autocomplete.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { CapitalizeFirstLetterPipe } from './pipes/capitalize-first-letter.pipe';
-import { ContentCatImagesComponent } from './components/find-cats/content-cat-images/content-cat-images.component';
+import { CatImageListComponent } from './components/shared/cat-image-list/cat-image-list.component';
 import { DrawerFilterComponent } from './components/find-cats/drawer-filter/drawer-filter.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CatImageComponent } from './components/shared/cat-image/cat-image.component';
+import { StarredComponent } from './components/starred/starred.component';
+import { DeleteDialogComponent } from './components/starred/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavLinkComponent,
-    PageNotFoundComponent,
-    FindCatsComponent,
     CapitalizeFirstLetterPipe,
     LandingComponent,
     MatSelectComponent,
     MatAutocompleteComponent,
+    PageNotFoundComponent,
+    FindCatsComponent,
+    StarredComponent,
     HeaderComponent,
-    ContentCatImagesComponent,
+    CatImageComponent,
+    CatImageListComponent,
     DrawerFilterComponent,
+    CatImageComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +74,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatSelectModule,
     MatAutocompleteModule,
     MatBadgeModule,
+    MatDialogModule,
   ],
   providers: [
     {

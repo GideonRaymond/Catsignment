@@ -27,6 +27,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     /** Sets 'menuName' to username if exists, else 'meow' */
-    this.menuName = this.userService.getUser() ?? 'meow';
+    this.menuName = this.userService.userName ?? 'meow';
   }
 }

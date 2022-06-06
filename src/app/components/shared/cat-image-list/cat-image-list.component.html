@@ -2,7 +2,9 @@
   <cdk-virtual-scroll-viewport
     #scroller
     class="w-full h-full overflow-y-scroll max-w-screen"
-    [itemSize]="2"
+    [itemSize]="itemSize"
+    minBufferPx="600"
+    maxBufferPx="1200"
   >
     <ng-container *ngIf="cats.length">
       <app-cat-image
@@ -15,7 +17,7 @@
     <ng-container *ngIf="isInitializing">
       <ngx-skeleton-loader
         *ngFor="let i of emptyArray"
-        class="p-2 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72"
+        class="p-2 w-40 h-40 md:w-56 md:h-56"
       ></ngx-skeleton-loader>
     </ng-container>
     <span

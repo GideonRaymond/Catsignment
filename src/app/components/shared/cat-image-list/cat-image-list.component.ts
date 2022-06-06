@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { CatService } from './../../../services/cat.service';
 import {
@@ -23,6 +24,7 @@ export class CatImageListComponent implements AfterViewInit {
   /** List of retrieved Cat objects from CatService */
   cats: Cat[] = [];
   icon: 'close' | 'star';
+  itemSize: number;
   /** Empty array used to iterate over for the initial skeleton-loader */
   emptyArray = Array.apply(null, Array(20)).map(function () {});
 
@@ -37,7 +39,8 @@ export class CatImageListComponent implements AfterViewInit {
   constructor(
     private ngZone: NgZone,
     private dialog: MatDialog,
-    private catService: CatService
+    private catService: CatService,
+    private observer: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
@@ -68,11 +71,22 @@ export class CatImageListComponent implements AfterViewInit {
         map(() => this.scroller.measureScrollOffset('bottom')),
         pairwise(),
         filter((y, _) => y[0] > y[1] && y[1] < 300),
-        throttleTime(400)
+        throttleTime(1000)
       )
       .subscribe(() => {
-        this.ngZone.run(() => this.catService.getCatImages(this.isStarred));
+        this.ngZone.run(() => {
+          this.catService.getCatImages(this.isStarred);
+        });
       });
+
+    /** Changing the size of each row of the infinite scroller. */
+    this.observer.observe(['(max-width: 768px)']).subscribe((res) => {
+      if (res.matches) {
+        this.itemSize = Math.round((40 * 4) / 3);
+      } else {
+        this.itemSize = Math.round((54 * 4) / 3);
+      }
+    });
   }
 
   handleImageClick(cat: Cat): void {

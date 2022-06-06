@@ -39,7 +39,7 @@ export class CatService {
   /** Header to send with every request to the CatApi */
   private header: Header;
   /** Maximum number of images per request */
-  private requestLimit = 20;
+  private requestLimit = 24;
   /** Order images are retrieved by ('rand' == random) */
   private requestOrder = 'rand';
   /**
@@ -132,6 +132,7 @@ export class CatService {
       .get<GetCatsResponse | GetFavoriteCatsResponse>(url, this.header)
       .pipe(
         filter(() => !this.isLoading && !this.isScrollEnd),
+        throttleTime(2500),
         timeout(5000),
         map((res) => {
           this.isLoadingImages = true;
@@ -139,10 +140,7 @@ export class CatService {
         })
       )
       .subscribe({
-        next: (res: Cat[]) => {
-          this.finishRequest(res);
-          console.log('HERE');
-        },
+        next: (res: Cat[]) => this.finishRequest(res),
         error: () => {
           this.handleError();
           this.finishRequest([]);
@@ -154,6 +152,7 @@ export class CatService {
     /** Tells the service that a request has succesfully been completed */
     this.isLoadingImages = false;
     this.isInitializingImages = false;
+    this.scrollPage += 1;
     this.setCats(res);
   }
 
@@ -277,6 +276,7 @@ export class CatService {
   resetCats(): void {
     /** Reset cat-list to an empty array. */
     this.setCats([]);
+    this.scrollPage = 0;
   }
 
   private handleError(): void {

@@ -10,7 +10,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 @Component({
   selector: 'app-find-cats',
   templateUrl: './find-cats.component.html',
-  styleUrls: ['./find-cats.component.scss'],
 })
 export class FindCatsComponent implements AfterViewInit {
   /** The side-bar for with filter-options. */

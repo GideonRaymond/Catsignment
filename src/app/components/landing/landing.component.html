@@ -4,7 +4,7 @@
     <span class="mb-4 text-xl">We provide a paw, you get the cat's ass!</span>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="flex flex-col">
-        <mat-form-field color="accent" class="mb-6">
+        <mat-form-field color="accent" class="mb-6" class="username-field">
           <mat-label class="text-white">Username</mat-label>
           <input
             class="text-white"
@@ -23,7 +23,12 @@
             >Provide a username in order to save images!</mat-error
           >
         </mat-form-field>
-        <button mat-flat-button color="accent" type="submit">
+        <button
+          mat-flat-button
+          [disabled]="!this.form.valid"
+          color="accent"
+          type="submit"
+        >
           Get started!
         </button>
       </div>

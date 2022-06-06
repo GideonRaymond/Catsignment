@@ -4,7 +4,6 @@ import { MenuItem } from 'src/app/app.component';
 @Component({
   selector: 'app-nav-link',
   templateUrl: './nav-link.component.html',
-  styleUrls: ['./nav-link.component.scss'],
 })
 export class NavLinkComponent {
   @Input() menuItem: MenuItem;

@@ -12,7 +12,7 @@ export class LandingComponent {
   minLength = 5;
   maxLength = 12;
   /** Initial form control for Username input field. */
-  control = new FormControl(this.userService.getUser(), [
+  control = new FormControl(this.userService.userName, [
     Validators.minLength(this.minLength),
     Validators.maxLength(this.maxLength),
     Validators.required,

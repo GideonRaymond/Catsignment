@@ -19,6 +19,7 @@ import { DeleteDialogComponent } from '../../starred/delete-dialog/delete-dialog
 })
 export class CatImageListComponent implements AfterViewInit {
   @Input() isStarred: boolean;
+  @Input() triggered: boolean;
   /** Virtual scroller element which can be used to track scroll position. */
   @ViewChild('scroller') scroller: CdkVirtualScrollViewport;
   /** List of retrieved Cat objects from CatService */
@@ -54,7 +55,10 @@ export class CatImageListComponent implements AfterViewInit {
     this.catService.resetFilters();
     this.catService.getCatImages(this.isStarred);
 
-    this.getCats();
+    this.catService.getCatImages();
+    this.catService.cats$.subscribe((cats) => {
+      this.cats = cats;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -73,7 +77,7 @@ export class CatImageListComponent implements AfterViewInit {
       )
       .subscribe(() => {
         this.ngZone.run(() => {
-          this.getCats();
+          this.catService.getCatImages();
         });
       });
 
@@ -84,13 +88,6 @@ export class CatImageListComponent implements AfterViewInit {
       } else {
         this.itemSize = Math.round((54 * 4) / 3);
       }
-    });
-  }
-
-  getCats(): void {
-    this.catService.getCatImages(this.isStarred).subscribe((cats) => {
-      this.cats = [...this.cats, ...cats];
-      this.catService.finishRequest(this.cats);
     });
   }
 

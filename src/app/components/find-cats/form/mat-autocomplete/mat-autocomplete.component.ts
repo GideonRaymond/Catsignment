@@ -1,7 +1,13 @@
 import { SelectItem } from './../../../../services/cat.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, startWith, map } from 'rxjs';
+import {
+  Observable,
+  startWith,
+  map,
+  debounceTime,
+  distinctUntilChanged,
+} from 'rxjs';
 
 @Component({
   selector: 'app-mat-autocomplete',
@@ -11,14 +17,14 @@ export class MatAutocompleteComponent implements OnInit {
   /** Parent FormGroup */
   @Input() formGroup: FormGroup;
   /** List of options to display in dropdown */
-  @Input() options: SelectItem[];
+  @Input() options: string[];
   /** Form field label */
   @Input() label: string;
 
   /** Sets the formControl of the AutoComplete */
-  control: FormControl = new FormControl();
+  control: FormControl = new FormControl('');
   /** List of options; filtered after 'control.value' has a value */
-  filteredOptions: Observable<SelectItem[]>;
+  filteredOptions: Observable<string[]>;
 
   ngOnInit() {
     /**
@@ -28,19 +34,20 @@ export class MatAutocompleteComponent implements OnInit {
     const controlName = this.label.toLowerCase();
 
     this.filteredOptions = this.control.valueChanges.pipe(
+      debounceTime(400),
       startWith(''),
-      map((value: SelectItem) => this.filter(value ? value.name ?? '' : ''))
+      map((value: string) => this.filter(value ?? ''))
     );
 
     this.formGroup.addControl(controlName, this.control);
   }
 
-  filter(value: string): SelectItem[] {
+  filter(value: string): string[] {
     /** Filter function, compares the names in 'options' to the input-value */
     const filterValue = value.toLowerCase();
 
-    return this.options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
+    return this.options.filter((name) =>
+      name.toLowerCase().includes(filterValue)
     );
   }
 }

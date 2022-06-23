@@ -55,10 +55,6 @@ export class CatService {
   private activeCategoryFilter: (string | number)[] = [];
   /** List of Cats currently in memory. */
   private cats: Cat[] = [];
-  /** Subject to cast incoming request response to Observers */
-  private catSubject = new Subject<Cat[]>();
-  /** Observable to subscribe to, new values pushed by 'cats' */
-  cats$: Observable<Cat[]> = this.catSubject.asObservable();
   /** Bool to set when request starts and finished */
   private isLoadingImages: boolean = false;
   /** Bool to set when initializing new list of cats. */
@@ -90,11 +86,6 @@ export class CatService {
     return this.cats.length % this.requestLimit !== 0;
   }
 
-  private setCats(cats: Cat[]): void {
-    this.cats = cats;
-    this.catSubject.next(this.cats);
-  }
-
   private getQueryParameters(useOrder: boolean = true): string {
     /** Sets the optional query parameters if available */
     let query = this.requestImageQuery;
@@ -114,7 +105,7 @@ export class CatService {
     return query;
   }
 
-  getCatImages(isStarred: boolean = false): void {
+  getCatImages(isStarred: boolean = false): Observable<Cat[]> {
     /** GET request which returns an array of GetCat objects and converts
      * them to Cat objects.
      */
@@ -128,7 +119,7 @@ export class CatService {
 
     url = url + query;
 
-    this.http
+    return this.http
       .get<GetCatsResponse | GetFavoriteCatsResponse>(url, this.header)
       .pipe(
         filter(() => !this.isLoading && !this.isScrollEnd),
@@ -136,24 +127,16 @@ export class CatService {
         timeout(5000),
         map((res) => {
           this.isLoadingImages = true;
-          return this.mapToCatItem(res);
+          return this.mapToCatItem(res, isStarred);
         })
-      )
-      .subscribe({
-        next: (res: Cat[]) => this.finishRequest(res),
-        error: () => {
-          this.handleError();
-          this.finishRequest([]);
-        },
-      });
+      );
   }
 
-  private finishRequest(res: Cat[]): void {
+  finishRequest(cats: Cat[]): void {
     /** Tells the service that a request has succesfully been completed */
     this.isLoadingImages = false;
     this.isInitializingImages = false;
-    this.scrollPage += 1;
-    this.setCats(res);
+    this.cats = cats;
   }
 
   getListOfCategories(): Observable<SelectItem[]> {
@@ -275,7 +258,7 @@ export class CatService {
 
   resetCats(): void {
     /** Reset cat-list to an empty array. */
-    this.setCats([]);
+    this.cats = [];
     this.scrollPage = 0;
   }
 

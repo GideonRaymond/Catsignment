@@ -5,7 +5,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development server
 
 - Run `npm i` to install all missing dependencies.
-- Duplicate ./src/environments/environment_example.ts twice. Rename the two duplicates to 'environment.ts' and 'environment.prod.ts'. Add the apiKey for the catApi to both.
+- Duplicate ./src/environments/environment_example.ts twice. Rename the two duplicates to 'environment.ts' and 'environment.prod.ts'. Add a valid apiKey for the catApi to both (can be aquired here: https://thecatapi.com/#pricing )
 - Then run 'npm start' for a dev server. Navigate to `http://localhost:4200/`.
 
 ## Build

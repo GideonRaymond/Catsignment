@@ -3,14 +3,14 @@
   <input
     type="text"
     placeholder="Pick one"
-    [value]="control.value ? control.value.name : null"
+    [value]="control.value ?? ''"
     matInput
     [formControl]="control"
     [matAutocomplete]="auto"
   />
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-      {{ option.name | capitalizeFirstLetter }}
+      {{ option | capitalizeFirstLetter }}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

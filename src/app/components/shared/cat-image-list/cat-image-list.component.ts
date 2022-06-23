@@ -1,4 +1,4 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { CatService } from './../../../services/cat.service';
 import {
@@ -24,7 +24,7 @@ export class CatImageListComponent implements AfterViewInit {
   /** List of retrieved Cat objects from CatService */
   cats: Cat[] = [];
   icon: 'close' | 'star';
-  itemSize: number;
+  itemSize = 72;
   /** Empty array used to iterate over for the initial skeleton-loader */
   emptyArray = Array.apply(null, Array(20)).map(function () {});
 
@@ -49,14 +49,12 @@ export class CatImageListComponent implements AfterViewInit {
      * Initializing the CatImages (without filters).
      * Deciding which icon to use on the cat-image.
      */
-    this.catService.cats$.subscribe((cats) => {
-      this.cats = [...this.cats, ...cats];
-    });
-
     this.icon = this.isStarred ? 'close' : 'star';
     this.catService.resetCats();
     this.catService.resetFilters();
     this.catService.getCatImages(this.isStarred);
+
+    this.getCats();
   }
 
   ngAfterViewInit(): void {
@@ -75,17 +73,24 @@ export class CatImageListComponent implements AfterViewInit {
       )
       .subscribe(() => {
         this.ngZone.run(() => {
-          this.catService.getCatImages(this.isStarred);
+          this.getCats();
         });
       });
 
     /** Changing the size of each row of the infinite scroller. */
-    this.observer.observe(['(max-width: 768px)']).subscribe((res) => {
+    this.observer.observe([Breakpoints.Medium]).subscribe((res) => {
       if (res.matches) {
         this.itemSize = Math.round((40 * 4) / 3);
       } else {
         this.itemSize = Math.round((54 * 4) / 3);
       }
+    });
+  }
+
+  getCats(): void {
+    this.catService.getCatImages(this.isStarred).subscribe((cats) => {
+      this.cats = [...this.cats, ...cats];
+      this.catService.finishRequest(this.cats);
     });
   }
 
